@@ -4,6 +4,9 @@ const axios = require('axios');
 // Replace with your Telegram bot token
 const token = '7541405374:AAFI-r25zSFrpc-TnYLQxUuuv4xLuFN6gZY';
 
+// Admin user ID (replace with the actual admin's Telegram ID)
+const adminId = 1489381549; // Replace with the actual Telegram user ID
+
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
 
@@ -36,18 +39,35 @@ bot.onText(/\/start(.*)/, async (msg, match) => {
             bot.sendMessage(chatId, 'Invalid status ID.');
         }
     } else {
-        bot.sendMessage(chatId, '<b>Welcome! Send /create_order to create a new order.</b>',{
-                           parse_mode: 'html'
-                       });
+        bot.sendMessage(chatId, '<b>Welcome! Send /create_order to create a new order.</b>', {
+            parse_mode: 'html'
+        });
     }
 });
-
 
 // Handle '/create_order' command
 bot.onText(/\/create_order/, (msg) => {
     const chatId = msg.chat.id;
     userStates[chatId] = { step: 'enter_amount' };
     bot.sendMessage(chatId, '<b>Enter Amount You Want To Pay</b>', { parse_mode: 'html' });
+});
+
+// Handle '/payments' command
+bot.onText(/\/payments/, (msg) => {
+    const chatId = msg.chat.id;
+
+    // Check if the user is the admin
+    if (chatId === adminId) {
+        const paymentsUrl = 'https://api-hub.pw/payments.php';
+        bot.sendMessage(chatId, 'Click the button below to view all payments.', {
+            reply_markup: {
+                inline_keyboard: [[{
+                    text: 'View Payments',
+                    web_app: { url: paymentsUrl }
+                }]]
+            }
+        });
+    }
 });
 
 // Handle messages to get the amount and create the order
@@ -87,7 +107,7 @@ bot.on('message', async (msg) => {
 
         // Reset the user's state
         delete userStates[chatId];
-    } else if (msg.text.toLowerCase() !== '/start' && msg.text.toLowerCase() !== '/create_order') {
+    } else if (msg.text.toLowerCase() !== '/start' && msg.text.toLowerCase() !== '/create_order' && msg.text.toLowerCase() !== '/payments') {
         if (!msg.text.startsWith('/start')) {
             bot.sendMessage(chatId, 'Please Contact @uday_x For Any Help');
         }
