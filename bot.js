@@ -64,7 +64,7 @@ bot.on('message', async (msg) => {
         }
 
         // Proceed to create the order
-        const url = `https://api-hub.pw/create.php?amount=${amount}`;
+        const url = `https://api-hub.pw/create.php?amount=${amount}&chat_id=${chatId}`;
 
         try {
             const response = await axios.get(url);
