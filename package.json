@@ -4,8 +4,9 @@
   "description": "",
   "main": "bot.js",
   "scripts": {
-  "start": "node bot.js"
-},
+    "start": "node bot.js",
+    "install-dependencies": "npm install"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
