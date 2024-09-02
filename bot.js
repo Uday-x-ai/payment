@@ -105,6 +105,7 @@ bot.on('message', async (msg) => {
             // Validate amount
             if (isNaN(amount) || Number(amount) <= 0) {
                 bot.sendMessage(chatId, 'Please enter a valid amount.');
+                delete userStates[chatId];
                 return;
             }
 
